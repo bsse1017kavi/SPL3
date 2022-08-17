@@ -19,4 +19,12 @@ def simple_upload(request):
     return render(request, 'hello.html')
 
 def select_tool(request):
+    if request.method == 'POST' and request.FILES['myfile']:
+        myfile = request.FILES['myfile']
+        fs = FileSystemStorage()
+        filename = fs.save(myfile.name, myfile)
+        uploaded_file_url = fs.url(filename)
+        return render(request, 'selector.html', {
+            'uploaded_file_url': uploaded_file_url
+        })
     return render(request, 'selector.html')
