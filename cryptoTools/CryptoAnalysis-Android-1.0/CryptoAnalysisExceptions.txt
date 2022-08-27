@@ -1,0 +1,4 @@
+CryptoAnalysis crashed on /home/ahmedulkavi/Desktop/app-release.apkjava.lang.NullPointerException
+	at main.CogniCryptAndroid.getRules(CogniCryptAndroid.java:78)
+	at main.CogniCryptAndroid.runCryptoAnalysis(CogniCryptAndroid.java:88)
+	at main.CogniCryptAndroid.main(CogniCryptAndroid.java:65)
