@@ -1,6 +1,19 @@
 <html>
-    <head>Result</head>
-    <body>
-        
+    <head>
+        <title>Result</title>
+    </head>
+    <body style="white-space: pre-line;">
+        {% if crypto_check %}
+            <h3>Report from Cryptoguard</h3>
+            {{cryptoguard_report}}
+
+            <br><br>
+        {% endif %}
+
+        {% if cogni_check %}
+            <h3>Report from Cognicrypt</h3>
+            {{cognicrypt_report}}
+        {% endif %}
+
     </body>
 </html>
