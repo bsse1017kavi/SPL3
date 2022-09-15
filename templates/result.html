@@ -5,7 +5,12 @@
     <body style="white-space: pre-line;">
         {% if crypto_check %}
             <h3>Report from Cryptoguard</h3>
-            {{cryptoguard_report}}
+            {{cryptoguard_summary|safe}}
+            <div id="cryptoguard_report" style="display:none">
+                {{cryptoguard_report}}
+            </div>
+
+            <button id="details_crypt" onclick="showCryptoguardDetails()">Show Details</button>
 
             <br><br>
         {% endif %}
@@ -14,6 +19,23 @@
             <h3>Report from Cognicrypt</h3>
             {{cognicrypt_report}}
         {% endif %}
+
+        <script>
+            function showCryptoguardDetails()
+            {
+                if(document.getElementById("cryptoguard_report").style.display == "none")
+                {
+                    document.getElementById("cryptoguard_report").style.display = "inline";
+                    document.getElementById("details_crypt").innerText = "Hide Details"
+                }
+
+                else
+                {
+                    document.getElementById("cryptoguard_report").style.display = "none";
+                    document.getElementById("details_crypt").innerText = "Show Details"
+                }
+            }
+        </script>
 
     </body>
 </html>
