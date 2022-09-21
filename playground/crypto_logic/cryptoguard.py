@@ -101,13 +101,16 @@ class Cryptoguard:
 
             cnt+=1
 
-        score = e ** non_standardised_score
+        score = non_standardised_score*56/95
+
+        # score = e ** non_standardised_score
 
         # score = (e ** non_standardised_score) / ((e ** non_standardised_score)+1)
         # score *= 100
 
         summary = "<pre style=\"font-family: Garamond, serif;\">"
         summary += "Total violations: " + str(total_violations) + "\n"
+        summary += "\n\n"
         # summary += "Cryptoguard Score: " + str(score) + "%\n\n"
         i = 0
         for elem in summary_list:

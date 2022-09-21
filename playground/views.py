@@ -6,7 +6,7 @@ from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import redirect
 import subprocess
-import os
+import os, re
 import shutil
 from playground.crypto_logic.cryptoguard import Cryptoguard
 
@@ -35,6 +35,84 @@ def run_cognicrypt():
     # temp = subprocess.Popen([cmd], stdout = subprocess.PIPE)
     # subprocess.Popen(["cd", android_sdk_platform], stdout = subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True).communicate()
     # output = subprocess.Popen(["ls", android_sdk_platform], stdout = subprocess.PIPE).communicate()
+
+def get_cognicrypt_summary(report):
+    length = len(report)
+    summary = ""
+    details = ""
+    start = 0
+    
+    for i in range(0, length):
+        if report[i]=='=' and report[i+1]=='=':
+            start = i
+            break
+
+    for i in range(start,length):
+        summary += report[i]
+
+    for i in range(0, start):
+        details += report[i]
+
+    error = summary.count("Error")
+    # print(error)
+
+    # print(res)
+
+    errors = []
+    errorString = ""
+
+    processed_summary = summary.replace("\n", "?")
+    processed_summary = summary.replace("\t", "?")
+    res = [m.start() for m in re.finditer("Error", processed_summary)]
+
+    for elem in res:
+        for i in reversed(range(elem)):
+            # print(summary[i])
+            if(processed_summary[i]=="?"):
+                break
+            errorString+=processed_summary[i]
+        
+        errorString = errorString[::-1]
+        errorString += "Error"
+        errors.append(errorString)
+        errorString = ""
+
+    # print(errors)
+
+    rules = []
+
+    for elem in errors:
+        searchString = elem + " violating CrySL rule for "
+        index = details.find(searchString)
+        print(index)
+
+        target_index = index + len(searchString)
+        rule = ""
+
+        for i in range(target_index, len(details)-1):
+            if(details[i]=="\n"):
+                break
+            rule+=details[i]
+
+        rules.append(searchString + rule)
+
+    print(rules)
+
+    i = 0
+    for elem in errors:
+        summary = summary.replace(elem, rules[i])
+        i+=1
+
+    for elem in rules:
+        index = summary.find(elem) + len(elem) + 3
+        if summary[index+1]=='\n':
+            summary = summary[:index] + " time(s)" + summary[index + 1:]
+        else:
+            summary = summary[:index] + " time(s)\n" + summary[index + 1:]
+        
+
+
+    return summary, details
 
 # Create your views here.
 def say_hello(request):
@@ -99,7 +177,7 @@ def result (request):
 
         cryptoguard_report = ''
 
-        # cryptoguard_report_file_name = "_CryptoGuard-04.05.03_avg_f6ca0a1b-de20-445e-914c-8971d4e291bb_.txt"
+        # cryptoguard_report_file_name = "_CryptoGuard-04.05.03_avg_44080a74-faa2-430f-8ba2-154aa603e93e_.txt"
 
         with open(cryptoguard_report_file_name, "r") as f:
             cryptoguard_report = f.read()
@@ -119,11 +197,13 @@ def result (request):
         f.close()
 
     cryptoguard_summary = cryptoguard.check_cryptoguard_violations(cryptoguard_report)
+    cognicrypt_summary, cognicrypt_details = get_cognicrypt_summary(cognicrypt_report)
 
     context = {
         'cryptoguard_report': cryptoguard_report,
         'cryptoguard_summary': cryptoguard_summary,
-        'cognicrypt_report' : cognicrypt_report,
+        'cognicrypt_report' : cognicrypt_details,
+        'cognicrypt_summary' : cognicrypt_summary,
         'crypto_check' : crypto_check,
         'cogni_check' : cogni_check
     }
@@ -138,7 +218,7 @@ def result (request):
     return render(request, 'result.html', context)
 
 def process(request):
-    global file_path, cryptoguard
+    global crypto_check, cogni_check, file_path, cryptoguard
     if crypto_check:
         cryptoguard.run_cryptoguard(file_path)
 

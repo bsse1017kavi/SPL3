@@ -1,23 +1,61 @@
 <html>
     <head>
         <title>Result</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     </head>
     <body style="white-space: pre-line;">
+        <nav class="navbar navbar-expand-sm bg-info">
+
+            <!-- Links -->
+            <ul class="navbar-nav">
+            <li class="nav-item">
+                <!-- <a class="nav-link" href="#"></a> -->
+                <br>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#"></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#"></a>
+            </li>
+            </ul>
+        
+        </nav>
+
         {% if crypto_check %}
-            <h3>Report from Cryptoguard</h3>
-            {{cryptoguard_summary|safe}}
-            <div id="cryptoguard_report" style="display:none">
-                {{cryptoguard_report}}
+            <div class="card shadow p-3 mb-5 bg-white rounded" style="margin: 10px;">
+                <div class="card-body">
+                    <h5 class="card-title"><b>Report from Cryptoguard</b></h5>
+                    {{cryptoguard_summary|safe}}
+                    <div id="cryptoguard_report" style="display:none">
+                        {{cryptoguard_report}}
+                    </div>
+
+                    <button id="details_crypt" class="btn btn-info" onclick="showCryptoguardDetails()">Show Details</button>
+
+                    <br><br>
+                </div>
             </div>
-
-            <button id="details_crypt" onclick="showCryptoguardDetails()">Show Details</button>
-
-            <br><br>
         {% endif %}
 
         {% if cogni_check %}
-            <h3>Report from Cognicrypt</h3>
-            {{cognicrypt_report}}
+            <div class="card shadow p-3 mb-5 bg-white rounded" style="margin: 10px;">
+                <div class="card-body">
+                    <h5 class="card-title"><b>Report from Cognicrypt</b></h5>
+                    {{cognicrypt_summary}}
+                    <div id="cognicrypt_report" style="display:none">
+                        {{cognicrypt_report}}
+                    </div>
+
+                    <br>
+
+                    <button id="details_cogni" class="btn btn-info" onclick="showCognicryptDetails()">Show Details</button>
+
+                    <br><br>
+                </div>
+            </div>
         {% endif %}
 
         <script>
@@ -34,6 +72,21 @@
                     document.getElementById("cryptoguard_report").style.display = "none";
                     document.getElementById("details_crypt").innerText = "Show Details"
                 }
+            }
+
+            function showCognicryptDetails()
+            {
+                if(document.getElementById("cognicrypt_report").style.display == "none")
+                {
+                    document.getElementById("cognicrypt_report").style.display = "inline";
+                    document.getElementById("details_cogni").innerText = "Hide Details"
+                }
+
+                else
+                {
+                    document.getElementById("cognicrypt_report").style.display = "none";
+                    document.getElementById("details_cogni").innerText = "Show Details"
+                }    
             }
         </script>
 
