@@ -53,6 +53,18 @@
             </div>
         {% endif %}
 
+        {% if flow_check %}
+            <div class="card shadow p-3 mb-5 bg-white rounded" style="margin: 10px;">
+                <div class="card-body">
+                    <h5 class="card-title"><b>Report from FlowDroid</b></h5>
+                    <div id="leak_report">
+                        {{leak_report|safe}}
+                    </div>
+
+                </div>
+            </div>
+        {% endif %}
+
         <script>
             function showCryptoguardDetails()
             {

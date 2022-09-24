@@ -21,8 +21,6 @@ class Cryptoguard:
         # output = temp.args
         # output = subprocess.list2cmdline(output)
 
-        print('it ran')
-
         return output
 
     def check_cryptoguard_violations(self, report):

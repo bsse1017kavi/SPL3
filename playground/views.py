@@ -9,6 +9,7 @@ import subprocess
 import os, re
 import shutil
 from playground.crypto_logic.cryptoguard import Cryptoguard
+from playground.flow_logic.flowdroid import FlowDroid
 
 name = 'hello'
 cogni_check = False
@@ -19,6 +20,7 @@ cryptoguard_report_file_name = ''
 security_analysis_check = True
 
 cryptoguard = Cryptoguard()
+flowdroid = FlowDroid()
 
 def run_cognicrypt():
     global file_path
@@ -139,7 +141,10 @@ def simple_upload(request):
         if security_analysis_check:
             return HttpResponseRedirect('/select')
 
-        os.remove(file_path)
+        else:
+            return HttpResponseRedirect('/loading')
+
+        # os.remove(file_path)
 
 
     return render(request, 'hello.html')
@@ -156,48 +161,52 @@ def select_tool(request):
     return render(request, 'selector.html')
 
 def result (request):
-    global crypto_check, cogni_check, file_name, cryptoguard_report_file_name, cryptoguard
+    global crypto_check, cogni_check, file_name, cryptoguard_report_file_name, cryptoguard, security_analysis_check
 
     cryptoguard_report = ''
     cognicrypt_report = ''
 
-    if crypto_check:
-        directory = os.listdir(".")
+    if security_analysis_check:
+        if crypto_check:
+            directory = os.listdir(".")
 
-        searchString = "_CryptoGuard-04.05.03_"
+            searchString = "_CryptoGuard-04.05.03_"
 
-        for character in file_name:
-            if character==".":
-                break
-            searchString += character
+            for character in file_name:
+                if character==".":
+                    break
+                searchString += character
 
-        for fname in directory:
-            if searchString in fname:
-                cryptoguard_report_file_name  = fname
+            for fname in directory:
+                if searchString in fname:
+                    cryptoguard_report_file_name  = fname
 
-        cryptoguard_report = ''
+            cryptoguard_report = ''
 
-        # cryptoguard_report_file_name = "_CryptoGuard-04.05.03_avg_44080a74-faa2-430f-8ba2-154aa603e93e_.txt"
+            # cryptoguard_report_file_name = "_CryptoGuard-04.05.03_avg_44080a74-faa2-430f-8ba2-154aa603e93e_.txt"
 
-        with open(cryptoguard_report_file_name, "r") as f:
-            cryptoguard_report = f.read()
-        
-        f.close()
+            with open(cryptoguard_report_file_name, "r") as f:
+                cryptoguard_report = f.read()
+            
+            f.close()
 
-    if cogni_check:
-        path = 'cognicrypt-reports/'
-        path += file_name.replace(".apk", "")
-        path += "/CogniCrypt-Report.txt"
+        if cogni_check:
+            path = 'cognicrypt-reports/'
+            path += file_name.replace(".apk", "")
+            path += "/CogniCrypt-Report.txt"
 
-        print(path)
+            print(path)
 
-        with open(path, "r") as f:
-            cognicrypt_report = f.read()
-        
-        f.close()
+            with open(path, "r") as f:
+                cognicrypt_report = f.read()
+            
+            f.close()
 
     cryptoguard_summary = cryptoguard.check_cryptoguard_violations(cryptoguard_report)
     cognicrypt_summary, cognicrypt_details = get_cognicrypt_summary(cognicrypt_report)
+    flowdroid_leak_report = flowdroid.get_leak_report()
+
+    flow_check = not security_analysis_check
 
     context = {
         'cryptoguard_report': cryptoguard_report,
@@ -205,7 +214,9 @@ def result (request):
         'cognicrypt_report' : cognicrypt_details,
         'cognicrypt_summary' : cognicrypt_summary,
         'crypto_check' : crypto_check,
-        'cogni_check' : cogni_check
+        'flow_check': flow_check,
+        'cogni_check' : cogni_check,
+        'leak_report' : flowdroid_leak_report
     }
 
     if crypto_check:
@@ -218,12 +229,16 @@ def result (request):
     return render(request, 'result.html', context)
 
 def process(request):
-    global crypto_check, cogni_check, file_path, cryptoguard
-    if crypto_check:
-        cryptoguard.run_cryptoguard(file_path)
+    global crypto_check, cogni_check, file_path, cryptoguard, security_analysis_check
+    if security_analysis_check:
+        if crypto_check:
+            cryptoguard.run_cryptoguard(file_path)
 
-    if cogni_check:
-        run_cognicrypt()
+        if cogni_check:
+            run_cognicrypt()
+
+    else:
+        flowdroid.run_flowdroid(file_path)
     
     return HttpResponse("")
 
