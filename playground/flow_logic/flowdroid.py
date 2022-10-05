@@ -51,17 +51,27 @@ class FlowDroid:
             leak_report += "Total leaks: " + str(leak_count) + "\n\n"
 
             for elem in result:
-                leak_report += self.concat_dashes()
+                # leak_report += self.concat_dashes()
+                leak_report += "<div class=\"card shadow p-3 mb-5 bg-white rounded\" style=\"margin: 10px;\">"
+                leak_report += "<div class=\"card-body\">"
                 self.report = ""
                 self.pretty(elem)
                 leak_report += self.report
-                leak_report += self.concat_dashes()
+                # leak_report += self.concat_dashes()
+                leak_report += "</div>"
+                leak_report += "<br>"
+                leak_report += "</div>"
 
             leak_report = leak_report.replace("@", "")
             leak_report = leak_report.replace("<", "\"")
             leak_report = leak_report.replace(">", "\"")
 
             leak_report = leak_report.replace("\"pre style=\"font-family: Garamond, serif;font-size: 16px;\"\"", "<pre style=\"font-family: Garamond, serif;font-size: 16px;\">")
+
+            leak_report = leak_report.replace("\"div class=\"card shadow p-3 mb-5 bg-white rounded\" style=\"margin: 10px;\"\"", "<div class=\"card shadow p-3 mb-5 bg-white rounded\" style=\"margin: 10px;\">")
+            leak_report = leak_report.replace("\"div class=\"card-body\"\"", "<div class=\"card-body\">")
+            leak_report = leak_report.replace("\"/div\"", "</div>")
+            leak_report = leak_report.replace("\"br\"", "<br>")
 
             leak_report += "</pre>"
 

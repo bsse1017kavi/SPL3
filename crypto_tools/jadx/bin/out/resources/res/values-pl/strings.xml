@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="action_settings">Ustawienia</string>
+    <string name="app_name">2048</string>
+    <string name="changelog_full_title">Lista zmian</string>
+    <string name="changelog_ok_button">OK</string>
+    <string name="changelog_show_full">Więcej…</string>
+    <string name="changelog_title">Co nowego</string>
+    <string name="changelog_version_format">Wersja %s</string>
+    <string name="press_back_again_to_exit">Naciśnij ponownie, aby wyjść</string>
+    <string name="toggle_fullscreen">Trzymaj nacisk na pare sekund, aby zmienic na pełny ekran</string>
+</resources>

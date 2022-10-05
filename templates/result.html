@@ -5,6 +5,7 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <!-- <script src="{% static 'js/pagination.js' %}"></script> -->
     </head>
     <body style="white-space: pre-line;">
         <nav class="navbar navbar-expand-sm bg-info ">
@@ -53,10 +54,29 @@
             </div>
         {% endif %}
 
-        {% if flow_check %}
+        {% if not flow_check %}
             <div class="card shadow p-3 mb-5 bg-white rounded" style="margin: 10px;">
                 <div class="card-body">
-                    <h5 class="card-title"><b>Report from FlowDroid</b></h5>
+                    <h5 class="card-title"><b>Report from SecTool</b></h5>
+
+                    <div id="sectool_report">
+                        {{sectool_report}}
+                    </div>
+
+                    <!-- <br> -->
+
+                    <!-- <button id="details_cogni" class="btn btn-info" onclick="showCognicryptDetails()">Show Details</button> -->
+                </div>
+            </div>
+        {% endif %}
+
+        {% if flow_check %}
+            <!-- <ul class="pagination example">
+            </ul> -->
+            
+            <div style="margin: 20px;">
+                <div >
+                    <h5 ><b>Report from FlowDroid</b></h5>
                     <div id="leak_report">
                         {{leak_report|safe}}
                     </div>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="changelog_full_title">Zoznam zmien</string>
+    <string name="changelog_ok_button">OK</string>
+    <string name="changelog_show_full">Viac…</string>
+    <string name="changelog_title">Čo je nové</string>
+    <string name="changelog_version_format">Verzia %s</string>
+</resources>

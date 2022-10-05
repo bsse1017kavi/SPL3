@@ -1,3 +1,4 @@
+import imp
 from math import e
 from urllib import request
 from django.shortcuts import render
@@ -9,6 +10,7 @@ import subprocess
 import os, re
 import shutil
 from playground.crypto_logic.cryptoguard import Cryptoguard
+from playground.crypto_logic.jadx import decompile
 from playground.flow_logic.flowdroid import FlowDroid
 
 name = 'hello'
@@ -18,6 +20,7 @@ file_path = ''
 file_name = ''
 cryptoguard_report_file_name = ''
 security_analysis_check = True
+sectool_report = ''
 
 cryptoguard = Cryptoguard()
 flowdroid = FlowDroid()
@@ -161,7 +164,7 @@ def select_tool(request):
     return render(request, 'selector.html')
 
 def result (request):
-    global crypto_check, cogni_check, file_name, cryptoguard_report_file_name, cryptoguard, security_analysis_check
+    global crypto_check, cogni_check, file_name, cryptoguard_report_file_name, cryptoguard, security_analysis_check, sectool_report
 
     cryptoguard_report = ''
     cognicrypt_report = ''
@@ -204,9 +207,12 @@ def result (request):
 
     cryptoguard_summary = cryptoguard.check_cryptoguard_violations(cryptoguard_report)
     cognicrypt_summary, cognicrypt_details = get_cognicrypt_summary(cognicrypt_report)
-    flowdroid_leak_report = flowdroid.get_leak_report()
+    flowdroid_leak_report = ''
 
     flow_check = not security_analysis_check
+
+    if flow_check:
+        flowdroid_leak_report = flowdroid.get_leak_report()
 
     context = {
         'cryptoguard_report': cryptoguard_report,
@@ -216,7 +222,8 @@ def result (request):
         'crypto_check' : crypto_check,
         'flow_check': flow_check,
         'cogni_check' : cogni_check,
-        'leak_report' : flowdroid_leak_report
+        'leak_report' : flowdroid_leak_report,
+        'sectool_report': sectool_report
     }
 
     if crypto_check:
@@ -229,13 +236,17 @@ def result (request):
     return render(request, 'result.html', context)
 
 def process(request):
-    global crypto_check, cogni_check, file_path, cryptoguard, security_analysis_check
+    global crypto_check, cogni_check, file_path, cryptoguard, security_analysis_check, sectool_report
     if security_analysis_check:
         if crypto_check:
             cryptoguard.run_cryptoguard(file_path)
 
         if cogni_check:
             run_cognicrypt()
+
+        sectool_report = decompile(file_path)
+        # print("a")
+        # print(sectool_report)
 
     else:
         flowdroid.run_flowdroid(file_path)

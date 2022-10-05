@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="action_settings">Настройки</string>
+    <string name="app_name">2048</string>
+    <string name="changelog_full_title">Изменения</string>
+    <string name="changelog_ok_button">OK</string>
+    <string name="changelog_show_full">Подробнее…</string>
+    <string name="changelog_title">Что нового</string>
+    <string name="changelog_version_format">Версия %s</string>
+    <string name="press_back_again_to_exit">Нажмите кнопку [Назад] ещё раз, чтобы выйти</string>
+    <string name="toggle_fullscreen">Долгое нажатие переключает полноэкранный режим</string>
+</resources>
