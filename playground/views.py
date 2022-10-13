@@ -13,6 +13,10 @@ from playground.crypto_logic.cryptoguard import Cryptoguard
 from playground.crypto_logic.jadx import decompile
 from playground.flow_logic.flowdroid import FlowDroid
 
+from io import BytesIO
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+
 name = 'hello'
 cogni_check = False
 crypto_check = False
@@ -22,8 +26,21 @@ cryptoguard_report_file_name = ''
 security_analysis_check = True
 sectool_report = ''
 
+cr_rep = ''
+co_rep = ''
+fl_rep = ''
+
 cryptoguard = Cryptoguard()
 flowdroid = FlowDroid()
+
+def html_to_pdf(template_src, context_dict={}):
+     template = get_template(template_src)
+     html  = template.render(context_dict)
+     result = BytesIO()
+     pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
+     if not pdf.err:
+         return HttpResponse(result.getvalue(), content_type='application/pdf')
+     return None
 
 def run_cognicrypt():
     global file_path
@@ -163,6 +180,32 @@ def select_tool(request):
 
     return render(request, 'selector.html')
 
+def prepare_report(cryptoguard_summary, cryptoguard_report, cognicrypt_summary, cognicrypt_details, flowdroid_leak_report):
+    global cr_rep, co_rep, fl_rep
+
+    cr_rep = ""
+    cr_rep += "<h5><b>Report from Cryptoguard</b></h5>"
+    cr_rep += cryptoguard_summary + "<br><br>"
+    cr_rep += "<pre>"
+    cr_rep += cryptoguard_report
+    cr_rep += "</pre>"
+
+    co_rep = ""
+    co_rep += "<h5><b>Report from Cognicrypt</b></h5>"
+    co_rep += "<pre>"
+    co_rep += cognicrypt_summary
+    co_rep += "</pre>" 
+    co_rep += "<br><br>"
+    co_rep += "<pre>"
+    co_rep += cognicrypt_details
+    co_rep += "</pre>"
+
+    fl_rep = ""
+    fl_rep += "<h3><b>Report from FlowDroid</b></h5>"
+    fl_rep += "<pre>"
+    fl_rep += flowdroid_leak_report
+    fl_rep += "</pre>"
+
 def result (request):
     global crypto_check, cogni_check, file_name, cryptoguard_report_file_name, cryptoguard, security_analysis_check, sectool_report
 
@@ -214,6 +257,8 @@ def result (request):
     if flow_check:
         flowdroid_leak_report = flowdroid.get_leak_report()
 
+    prepare_report(cryptoguard_summary, cryptoguard_report, cognicrypt_summary, cognicrypt_details, flowdroid_leak_report)
+
     context = {
         'cryptoguard_report': cryptoguard_report,
         'cryptoguard_summary': cryptoguard_summary,
@@ -255,3 +300,66 @@ def process(request):
 
 def loading(request):
     return render(request, 'loading.html')
+
+def crypto_report(request):
+    global cr_rep
+    with open("templates/crypto_report.html", "w") as file:
+        file.write(cr_rep)
+        file.close()
+
+    # getting the template
+    pdf = html_to_pdf('crypto_report.html')
+
+    os.remove("templates/crypto_report.html")
+        
+    # rendering the template
+    return HttpResponse(pdf, content_type='application/pdf')
+
+def cogni_report(request):
+    global co_rep
+    with open("templates/cogni_report.html", "w") as file:
+        file.write(co_rep)
+        file.close()
+
+    # getting the template
+    pdf = html_to_pdf('cogni_report.html')
+
+    os.remove("templates/cogni_report.html")
+        
+    # rendering the template
+    return HttpResponse(pdf, content_type='application/pdf')
+
+def fl_report(request):
+    global fl_rep
+    with open("templates/fl_report.html", "w") as file:
+        file.write(fl_rep)
+        file.close()
+
+    # getting the template
+    pdf = html_to_pdf('fl_report.html')
+
+    os.remove("templates/fl_report.html")
+        
+    # rendering the template
+    return HttpResponse(pdf, content_type='application/pdf')
+
+def sec_report(request):
+    global sectool_report
+
+    content = ""
+    content += "<h5><b>Report from SecTool</b></h5>"
+    content += "<pre>"
+    content += sectool_report
+    content += "</pre>"
+
+    with open("templates/sec_report.html", "w") as file:
+        file.write(content)
+        file.close()
+
+    # getting the template
+    pdf = html_to_pdf('sec_report.html')
+
+    os.remove("templates/sec_report.html")
+        
+    # rendering the template
+    return HttpResponse(pdf, content_type='application/pdf')
