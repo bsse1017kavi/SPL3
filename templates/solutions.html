@@ -1,0 +1,46 @@
+<html>
+    <head>
+        <title>Solutions</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    </head>
+
+    <body>
+        <div class="card shadow p-3 mb-5 bg-white rounded" style="margin: 10px;" id="stronger_ssl_context">
+            <div class="card-body">
+                <h5 class="card-title"><b>Stronger SSL Context</b></h5>
+                <pre>
+SSLContext sc = SSLContext.getInstance("TLS");
+                </pre>
+
+            </div>
+        </div>
+
+        <div class="card shadow p-3 mb-5 bg-white rounded" style="margin: 10px;" id="gcm">
+            <div class="card-body">
+                <h5 class="card-title"><b>Use GCM</b></h5>
+                <pre>
+Cipher c = Cipher.getInstance("AES/GCM/NoPadding");
+c.init(Cipher.ENCRYPT_MODE, k, iv);
+byte[] cipherText = c.doFinal(plainText);
+                </pre>
+
+            </div>
+        </div>
+
+        <div class="card shadow p-3 mb-5 bg-white rounded" style="margin: 10px;" id="bouncy_castle">
+            <div class="card-body">
+                <h5 class="card-title"><b>Using Bouncy Castle</b></h5>
+                <pre>
+public static byte[] getEncryptedPassword(String password, byte[] salt) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    PKCS5S2ParametersGenerator gen = new PKCS5S2ParametersGenerator(new SHA256Digest());
+    gen.init(password.getBytes("UTF-8"), salt.getBytes(), 4096);
+    return ((KeyParameter) gen.generateDerivedParameters(256)).getKey();
+}
+                </pre>
+
+            </div>
+        </div>
+    </body>
+</html>

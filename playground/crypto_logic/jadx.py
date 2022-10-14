@@ -7,6 +7,7 @@ report_desc = ''
 report = ''
 # violated_files = []
 rules = {}
+solutions = {}
 
 def load_rules():
     global rules
@@ -16,6 +17,8 @@ def load_rules():
             rules_dummy_list = line.split(":")
             rules_value_list = rules_dummy_list[1].split(",")
             rules[rules_dummy_list[0]] = rules_value_list
+            solution = rules_dummy_list[2]
+            solutions[rules_dummy_list[0]] = solution
             print(rules[rules_dummy_list[0]])
         rule_file.close()
 
@@ -52,7 +55,8 @@ def search_rule_violation(directory_path):
                                 print("SSL Rule violation in file: " + file + " line no: " + str(line_number))
                                 print("Line: " + content[new_lines[line_number-2]+1:new_lines[line_number-1]].strip())
                                 report_desc += violation_keyword + " Rule violation in file: " + file + " line no: " + str(line_number) + "\n"
-                                report_desc += "Line: " + content[new_lines[line_number-2]+1:new_lines[line_number-1]].strip() + "\n\n"
+                                report_desc += "Line: " + content[new_lines[line_number-2]+1:new_lines[line_number-1]].strip() + "\n"
+                                report_desc += "Solution: " + solutions[key] + "\n\n"
                             
             f.close()
 

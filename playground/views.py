@@ -363,3 +363,6 @@ def sec_report(request):
         
     # rendering the template
     return HttpResponse(pdf, content_type='application/pdf')
+
+def solutions(request):
+    return render(request, 'solutions.html')

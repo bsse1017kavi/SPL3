@@ -1,3 +1,3 @@
-SSLContext.getInstance:"SSL"
-Cipher.getInstance:“AES”,“AES/ECB/NoPadding”,“AES/ECB/PKCS5Padding”,“AES/CBC/PKCS5Padding”
-MessageDigest.getInstance:“MD5”,“SHA1",“SHA-1”
+SSLContext.getInstance:"SSL":<a href="/solutions#stronger_ssl_context">Stronger SSL Context</a>
+Cipher.getInstance:“AES”,“AES/ECB/NoPadding”,“AES/ECB/PKCS5Padding”,“AES/CBC/PKCS5Padding”:<a href="/solutions#gcm">Use GCM</a>
+MessageDigest.getInstance:“MD5”,“SHA1",“SHA-1”:<a href="/solutions#bouncy_castle">Using Bouncy Castle</a>

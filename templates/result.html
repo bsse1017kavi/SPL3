@@ -75,9 +75,10 @@
                     <h5 class="card-title"><b>Report from SecTool</b></h5>
 
                     <div id="sectool_report">
-                        {{sectool_report}}
+                        {{sectool_report|safe}}
                     </div>
 
+                    <br>
 
                     <div>
                         <button  class="btn btn-info" onclick="window.open('/sec_report')">Download Report</button>
