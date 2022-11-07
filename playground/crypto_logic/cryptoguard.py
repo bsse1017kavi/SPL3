@@ -106,7 +106,7 @@ class Cryptoguard:
         # score = (e ** non_standardised_score) / ((e ** non_standardised_score)+1)
         # score *= 100
 
-        summary = "<pre style=\"font-family: Garamond, serif;\">"
+        summary = "<pre style=\"font-family: Garamond, serif;font-size: 18px;\">"
         summary += "Total violations: " + str(total_violations) + "\n"
         summary += "\n\n"
         # summary += "Cryptoguard Score: " + str(score) + "%\n\n"

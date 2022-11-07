@@ -1,64 +1,107 @@
 body {
-    /* display: flex;
+  /* display: flex;
     flex-direction: column; */
-    align-items: center;
-    justify-content: space-between;
-    background: linear-gradient(to right, #ffffff, #ffffff);
-    color: #020202;
-    font-family: 'Lato', sans-serif;
-  }
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(to right, #ffffff, #ffffff);
+  color: #020202;
+  font-family: 'Lato', sans-serif;
+}
+
+h2 {
+  margin: 50px 0;
+  text-align: center;
+  font-weight: bold;
+}
+
+.navbar-custom {
+  background-color: #2e3b4e !important;
+  padding: 10px 2%;
+}
+
+
+
+.file-drop-area {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 450px;
+  max-width: 100%;
+  padding: 25px;
+  border: 1px dashed rgba(0, 0, 0, 0.4);
+  border-radius: 3px;
+  transition: 0.2s;
+  /* From https://css.glass */
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.27);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   
-  h2 {
-    margin: 50px 0;
-    text-align: center;
-  }
-  
-  
-  
-  .file-drop-area {
-    position: relative;
-    display: flex;
-    align-items: center;
-    width: 450px;
-    max-width: 100%;
-    padding: 25px;
-    border: 1px dashed rgba(0, 0, 0, 0.4);
-    border-radius: 3px;
-    transition: 0.2s;
-   
-  }
-  
-  .choose-file-button {
-    flex-shrink: 0;
-    background-color: rgba(0, 0, 0, 0.04);
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 3px;
-    padding: 8px 15px;
-    margin-right: 10px;
-    font-size: 12px;
-    text-transform: uppercase;
-  }
-  
-  .file-message {
-    font-size: small;
-    font-weight: 300;
-    line-height: 1.4;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  
-  .file-input {
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 100%;
-    width: 100%;
-    cursor: pointer;
-    opacity: 0;
-    
-  }
-  
-  .mt-100{
-      margin-top:100px;
-  }
+}
+
+.choose-file-button {
+  flex-shrink: 0;
+  background-color: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+  padding: 8px 15px;
+  margin-right: 10px;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.file-message {
+  font-size: small;
+  font-weight: 300;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file-input {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  cursor: pointer;
+  opacity: 0;
+
+}
+
+.mt-100 {
+  margin-top: 100px;
+}
+
+.upload {
+  margin-left: -5%;
+}
+
+.options {
+  padding-left: 50px;
+  flex: auto;
+}
+
+.form-check {
+  margin-right: 50px;
+}
+
+.submit-btn {
+  margin-top: 7%;
+  height: 50px;
+  width: 200px;
+  background-color: #f9c23f;
+  border-color: #2e3b4e;
+  color: black;
+  font-size: 20px;
+}
+
+.submit-btn:hover,
+.submit-btn:active,
+.submit-btn:focus {
+  background-color: #2e3b4e !important;
+  border-color: #2e3b4e;
+  color: white;
+}

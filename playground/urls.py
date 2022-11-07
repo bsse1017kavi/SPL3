@@ -11,5 +11,6 @@ urlpatterns = [
     path("cogni_report", views.cogni_report, name="cogni_report"),
     path("sec_report", views.sec_report, name="sec_report"),
     path("fl_report", views.fl_report, name="fl_report"),
-    path("solutions", views.solutions, name="solutions")
+    path("solutions", views.solutions, name="solutions"),
+    path("combine", views.combine, name="combine")
 ]

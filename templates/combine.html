@@ -1,0 +1,49 @@
+{% load static %}
+<html>
+    <head>
+        <title>Result</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <!-- <script src="{% static 'js/pagination.js' %}"></script> -->
+    </head>
+    <body style="white-space: pre-line;">
+        <style>
+            .large-font{
+                font-size: 18px;
+            }
+        </style>
+        <nav class="navbar navbar-expand-sm bg-info ">
+
+            <ul class="navbar-nav">
+            
+            <li class="nav-item center">
+                <img src="{% static 'images/logo.png' %}" width="150" height="30"/>
+            </li>
+            
+            </ul>
+        
+        </nav>
+
+        <div class="">
+            <div class="row" style="margin: 10px;">
+                <div class="col-sm-4">
+                    <div class="card shadow p-3 mb-5 bg-white rounded" style="margin: 10px;">
+                        <div class="card-body">
+                            <h5 class="card-title"><b>Combined Report</b></h5>
+                            <div>
+                                {{combined_report|safe}}
+                            </div>
+
+                            <div class="row gx-5">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+        <script>
+        </script>
+
+    </body>
+</html>

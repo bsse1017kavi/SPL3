@@ -30,8 +30,49 @@ cr_rep = ''
 co_rep = ''
 fl_rep = ''
 
+combined_report = ''
+
 cryptoguard = Cryptoguard()
 flowdroid = FlowDroid()
+
+def combine_report(reports):
+    global combine_report
+    result = ''
+
+    encryption_violations = ["DES"]
+    hash_violations = ["MD5","SHA1"]
+
+    for report in reports:
+        report = report.replace("SHA-1", "SHA1")
+
+    for report in reports:
+        for item in encryption_violations:
+            if report.find(item) != -1:
+                s = "There is weak encryption function\n"
+                if result.find(s) == -1:
+                    result += s
+                s = item + " is not safe to use\n"
+                if result.find(s) == -1:
+                    result += s
+
+        # print(result+"$$$")
+
+        for item in hash_violations:
+            if report.find(item) != -1:
+                s = "There is weak hashing algorithm\n"
+                if result.find(s) == -1:
+                    result += s
+                s = item + " is not safe to use\n"
+                if result.find(s) == -1:
+                    result += s
+
+        # print(result+"$$$")
+
+    print(result)
+
+    combined_report = result
+
+    return result
 
 def html_to_pdf(template_src, context_dict={}):
      template = get_template(template_src)
@@ -136,6 +177,15 @@ def get_cognicrypt_summary(report):
 
     return summary, details
 
+def combine(request):
+    global combined_report
+
+    context = {
+        'combined_report': combined_report
+    }
+
+    return render(request, 'combine.html', context)
+
 # Create your views here.
 def say_hello(request):
     return render(request, 'hello.html')
@@ -208,6 +258,7 @@ def prepare_report(cryptoguard_summary, cryptoguard_report, cognicrypt_summary, 
 
 def result (request):
     global crypto_check, cogni_check, file_name, cryptoguard_report_file_name, cryptoguard, security_analysis_check, sectool_report
+    global combined_report
 
     cryptoguard_report = ''
     cognicrypt_report = ''
@@ -258,6 +309,23 @@ def result (request):
         flowdroid_leak_report = flowdroid.get_leak_report()
 
     prepare_report(cryptoguard_summary, cryptoguard_report, cognicrypt_summary, cognicrypt_details, flowdroid_leak_report)
+
+    content = ""
+    content += "<pre style=\"font-family: Garamond, serif;font-size: 18px;\">"
+    content += sectool_report
+    content += "</pre>"
+
+    sectool_report = content
+
+    content = ""
+
+    content += "<pre style=\"font-family: Garamond, serif;font-size: 18px;\">"
+    content += cryptoguard_report
+    content += "</pre>"
+
+    cryptoguard_report = content
+
+    combined_report = combine_report([cryptoguard_report, cognicrypt_details, sectool_report])
 
     context = {
         'cryptoguard_report': cryptoguard_report,
@@ -348,7 +416,7 @@ def sec_report(request):
 
     content = ""
     content += "<h5><b>Report from SecTool</b></h5>"
-    content += "<pre>"
+    content += "<pre style=\"font-family: Garamond, serif;font-size: 18px;\">"
     content += sectool_report
     content += "</pre>"
 
