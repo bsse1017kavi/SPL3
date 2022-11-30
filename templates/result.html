@@ -1,170 +1,235 @@
-{% load static %}
 <html>
-    <head>
-        <title>Result</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <!-- <script src="{% static 'js/pagination.js' %}"></script> -->
-    </head>
-    <body style="white-space: pre-line;">
-        <style>
-            .large-font{
-                font-size: 18px;
-            }
-        </style>
-        <nav class="navbar navbar-expand-sm bg-info ">
 
-            <ul class="navbar-nav">
-            
+<head>
+    <title>Result</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <style>
+        .large-font {
+            font-size: 18px;
+        }
+
+        label {
+            font-size: 17px;
+        }
+
+        body,
+        html {
+            height: 100%;
+        }
+
+        body {
+            /* background-image: url("../static/images/background.png");
+            background-size: cover; */
+            font-family: 'Lato', sans-serif;
+        }
+
+        .navbar-custom {
+            background-color: #2e3b4e !important;
+            padding: 10px 2%;
+        }
+
+        body
+        {
+            background: radial-gradient(#ffffff, #c6d7ee);
+        }
+
+        .card-title {
+            color: #2e3b4e;
+        }
+
+        .card-footer {
+            height: 3.5rem;
+            background-color: #f9c23f;
+            text-align: center;
+            padding: 0px;
+        }
+
+        .footer-button {
+            font-size: 20px;
+            background-color: transparent;
+            border: transparent;
+            margin-top: 10px;
+        }
+
+        .combine-btn {
+            text-align: center;
+            height: 50px;
+            width: 200px;
+            background-color: #f9c23f;
+            border-color: #2e3b4e;
+            color: black;
+            font-size: 20px;
+            margin: 50px auto;
+        }
+
+        .combine-btn:hover,
+        .combine-btn:active,
+        .combine-btn:focus {
+            background-color: #2e3b4e !important;
+            border-color: #2e3b4e;
+            color: white;
+        }
+
+        .col-4{
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+
+        #details_crypt,
+        #details_cogni {
+            color: #dcac1b;
+        }
+
+        .details{
+            border: 1px solid #2e3b4e;
+            margin-top: 30px;
+            background-color: #2e3b4e !important;
+            color: #dcac1b;
+        }
+    </style>
+    <nav class="navbar navbar-custom bg-info justify-content-center ">
+
+        <ul class="navbar-nav">
+
             <li class="nav-item center">
-                <img src="{% static 'images/logo.png' %}" width="150" height="30"/>
+                <img src="../static/images/logo.png" width="150" height="30" />
             </li>
-            
-            </ul>
-        
-        </nav>
 
-        <div class="">
-            <div class="row" style="margin: 10px;">
-                {% if crypto_check %}
-                    <div class="col-sm-4">
-                        <div class="card shadow p-3 mb-5 bg-white rounded" style="margin: 10px;">
-                            <div class="card-body">
-                                <h5 class="card-title"><b>Report from Cryptoguard</b></h5>
-                                {{cryptoguard_summary|safe}}
-                                <div id="cryptoguard_report" style="display:none">
-                                    {{cryptoguard_report|safe}}
-                                </div>
-    
-                                <div class="row gx-5">
-                                    <div class="col-xs-6 text-left p-3">
-                                        <button id="details_crypt" class="btn btn-info" onclick="showCryptoguardDetails()">Show Details</button>
-                                    </div>
-    
-                                    <div class="col-xs-6 text-right p-3">
-                                        <button  class="btn btn-info" onclick="window.open('/crypto_report')">Download Report</button>
-                                    </div>
-                                </div>
-    
-                            </div>
+        </ul>
+
+    </nav>
+
+    <div class="container"></div>
+
+    <div>
+        <div class="row" style="margin-left: 15px; margin-right: 15px; margin-top: 20px;">
+            {% if crypto_check %}
+            <div class="col-4" style="padding-right:25px">
+                <div class="card shadow mb-5 bg-white rounded">
+                    <img class="card-img-top" src="../static/images/guard.png" alt="Card image cap">
+                    <div class="card-body">
+                        <h4 class="card-title"><b>Report from Cryptoguard</b></h4>
+                        {{cryptoguard_summary|safe}}
+                        <div id="cryptoguard_report" style="display:none">
+                            {{cryptoguard_report|safe}}
                         </div>
+                        <br>
+                        <button class="btn btn-info details" onclick="showCryptoguardDetails()">Show Details</button>
                     </div>
-                {% endif %}
-
-                {% if cogni_check %}
-                    <div class="col-sm-4">
-                        <div class="card shadow p-3 mb-5 bg-white rounded" style="margin: 10px;">
-                            <div class="card-body">
-                                <h5 class="card-title"><b>Report from Cognicrypt</b></h5>
-                                <div class="large-font">
-                                    {{cognicrypt_summary}}
-                                </div>
-                                <div id="cognicrypt_report" style="display:none">
-                                <div class="large-font">
-                                    {{cognicrypt_report}}
-                                </div> 
-                                </div>
-    
-                                <br>
-    
-                                <div class="row gx-5">
-                                    <div class="col-xs-6 text-left p-3">
-                                        <button id="details_cogni" class="btn btn-info" onclick="showCognicryptDetails()">Show Details</button>
-                                    </div>
-    
-                                    <div class="col-xs-6 text-right p-3">
-                                        <button  class="btn btn-info" onclick="window.open('/cogni_report')">Download Report</button>
-                                    </div>
-                                </div>
-    
-                                <br><br>
-                            </div>
-                        </div>
+                    <div class="card-footer" onclick="window.open('/crypto_report')">
+                        <button class="footer-button"><b>Download Report</b></button>
                     </div>
-                {% endif %}
-
-                {% if not flow_check %}
-                    <div class="col-sm-4">
-                        <div class="card shadow p-3 mb-5 bg-white rounded" style="margin: 10px;">
-                            <div class="card-body">
-                                <h5 class="card-title"><b>Report from SecTool</b></h5>
-    
-                                <div id="sectool_report">
-                                    {{sectool_report|safe}}
-                                </div>
-    
-                                <br>
-    
-                                <div>
-                                    <button  class="btn btn-info" onclick="window.open('/sec_report')">Download Report</button>
-                                </div>
-    
-                                <!-- <br> -->
-    
-                                <!-- <button id="details_cogni" class="btn btn-info" onclick="showCognicryptDetails()">Show Details</button> -->
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-
-
-        {% if flow_check %}
-            <!-- <ul class="pagination example">
-            </ul> -->
-            
-            <div style="margin: 20px;">
-                <div >
-                    <h5 ><b>Report from FlowDroid</b></h5>
-                    <div id="leak_report">
-                        {{leak_report|safe}}
-                    </div>
-
-                    <div>
-                        <button  class="btn btn-info" onclick="window.open('/fl_report')">Download Report</button>
-                    </div>
-
                 </div>
             </div>
-        {% endif %}
+            {% endif %}
 
-        <div class="d-flex justify-content-center" style="margin-bottom: 20px;">
-            <button  class="btn btn-info" onclick="window.location.replace('/combine')">Combined Result</button>
+            <!-- col-md-offset-6 -->
+
+            {% if cogni_check %}
+            <div class="col-4" style="padding-left: 25px; padding-right:25px">
+                <div class="card shadow mb-5 bg-white rounded">
+                    <img class="card-img-top" src="../static/images/cogni.png" alt="Card image cap">
+                    <div class="card-body">
+                        <h4 class="card-title"><b>Report from Cognicrypt</b></h4>
+                        {{cognicrypt_summary|safe}}
+                        <div id="cognicrypt_report" style="display:none">
+                            {{cognicrypt_report|safe}}
+                        </div>
+                        <br><br>
+                        <button class="btn btn-info details" onclick="showCognicryptDetails()">Show Details</button>
+                    </div>
+                    <div class="card-footer" onclick="window.open('/cogni_report')">
+                        <button class="footer-button"><b>Download Report</b></button>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if not flow_check %}
+            <div class="col-4" style="padding-left: 25px;">
+                <div class="card shadow mb-5 bg-white rounded">
+                    <img class="card-img-top" src="../static/images/sectool.png" alt="Card image cap">
+                    <div class="card-body">
+                        <h4 class="card-title"><b>Report from Sectool</b></h4>
+                        <div id="sectool_report">
+                            {{sectool_report|safe}}
+                        </div>
+                    </div>
+                    <div class="card-footer" onclick="window.open('/sec_report')">
+                        <button class="footer-button"><b>Download Report</b></button>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
         </div>
+    </div>
 
-        <script>
-            function showCryptoguardDetails()
-            {
-                if(document.getElementById("cryptoguard_report").style.display == "none")
-                {
-                    document.getElementById("cryptoguard_report").style.display = "inline";
-                    document.getElementById("details_crypt").innerText = "Hide Details"
-                }
 
-                else
-                {
-                    document.getElementById("cryptoguard_report").style.display = "none";
-                    document.getElementById("details_crypt").innerText = "Show Details"
-                }
+    <!-- <ul class="pagination example">
+            </ul> -->
+
+    <!-- FlowDroid*********** -->
+
+    {% if flow_check %}
+    <div style="margin: 20px;">
+        <div>
+            <h5><b>Report from FlowDroid</b></h5>
+            <div id="leak_report">
+                {{leak_report|safe}}
+            </div>
+
+            <div>
+                <button class="btn btn-info" onclick="window.open('/fl_report')">Download Report</button>
+            </div>
+
+        </div>
+    </div>
+    {% endif %}
+
+    {% if not flow_check %}
+    <div class="d-flex justify-content-center" style="margin-bottom: 20px;">
+        <button class="btn btn-info combine-btn" onclick="window.location.href = '/combine'">Combined Result</button>
+    </div>
+    {% endif %}
+
+    <script>
+        function showCryptoguardDetails() {
+            if (document.getElementById("cryptoguard_report").style.display == "none") {
+                document.getElementById("cryptoguard_report").style.display = "inline";
+                document.getElementById("details_crypt").innerText = "Hide Details"
             }
 
-            function showCognicryptDetails()
-            {
-                if(document.getElementById("cognicrypt_report").style.display == "none")
-                {
-                    document.getElementById("cognicrypt_report").style.display = "inline";
-                    document.getElementById("details_cogni").innerText = "Hide Details"
-                }
-
-                else
-                {
-                    document.getElementById("cognicrypt_report").style.display = "none";
-                    document.getElementById("details_cogni").innerText = "Show Details"
-                }    
+            else {
+                document.getElementById("cryptoguard_report").style.display = "none";
+                document.getElementById("details_crypt").innerText = "Show Details"
             }
-        </script>
+        }
 
-    </body>
+        function showCognicryptDetails() {
+            if (document.getElementById("cognicrypt_report").style.display == "none") {
+                document.getElementById("cognicrypt_report").style.display = "inline";
+                document.getElementById("details_cogni").innerText = "Hide Details"
+            }
+
+            else {
+                document.getElementById("cognicrypt_report").style.display = "none";
+                document.getElementById("details_cogni").innerText = "Show Details"
+            }
+        }
+
+        function f(sol_no)
+        {
+            localStorage.setItem("sol_no", sol_no);
+            window.location.href = "/solutions";
+        }
+    </script>
+
+</body>
+
 </html>

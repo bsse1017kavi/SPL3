@@ -35,12 +35,19 @@ combined_report = ''
 cryptoguard = Cryptoguard()
 flowdroid = FlowDroid()
 
+def return_script(sol_no):
+    s = "<script> function() {localStorage.setItem(\"sol_no\"," + sol_no + "); window.location.replace(\"/solutions\");}</script>\n"
+    return s
+
+def return_button(val, sol_no):
+    return "<button onclick=f(\"" + sol_no + "\")>" + val + "</button>\n"
+
 def combine_report(reports):
     global combine_report
-    result = ''
+    result = '<pre>'
 
-    encryption_violations = ["DES"]
-    hash_violations = ["MD5","SHA1"]
+    encryption_violations = ["AES"]
+    hash_violations = ["MD5","SHA1","SHA-1"]
 
     for report in reports:
         report = report.replace("SHA-1", "SHA1")
@@ -49,6 +56,8 @@ def combine_report(reports):
         for item in encryption_violations:
             if report.find(item) != -1:
                 s = "There is weak encryption function\n"
+                # s+= "Solution: <a href=\"/solutions#gcm\">Use GCM</a>\n"
+                s+= "Solution: " + return_button("Use GCM", "sol2") 
                 if result.find(s) == -1:
                     result += s
                 s = item + " is not safe to use\n"
@@ -60,6 +69,8 @@ def combine_report(reports):
         for item in hash_violations:
             if report.find(item) != -1:
                 s = "There is weak hashing algorithm\n"
+                # s+= "Solution: <a href=\"/solutions#bouncy_castle\">Using Bouncy Castle</a>\n"
+                s+= "Solution: " + return_button("Using Bouncy Castle", "sol3")
                 if result.find(s) == -1:
                     result += s
                 s = item + " is not safe to use\n"
@@ -67,6 +78,8 @@ def combine_report(reports):
                     result += s
 
         # print(result+"$$$")
+
+    result += "</pre>"
 
     print(result)
 
@@ -174,11 +187,13 @@ def get_cognicrypt_summary(report):
             summary = summary[:index] + " time(s)\n" + summary[index + 1:]
         
 
+    summary = summary.replace("======================= CogniCrypt Summary ==========================", "================== CogniCrypt Summary ==================" )
+    summary = summary.replace("=====================================================================", "======================================================")
 
     return summary, details
 
 def combine(request):
-    global combined_report
+    global combined_report, file_path
 
     context = {
         'combined_report': combined_report
@@ -220,7 +235,11 @@ def simple_upload(request):
     return render(request, 'hello.html')
 
 def select_tool(request):
-    global cogni_check, crypto_check
+    global cogni_check, crypto_check, file_path
+
+    if not os.path.exists(file_path):
+        return HttpResponseRedirect('/')
+
     if request.method == 'POST':
 
         cogni_check = request.POST.get("cognicrypt", False)
@@ -234,6 +253,7 @@ def prepare_report(cryptoguard_summary, cryptoguard_report, cognicrypt_summary, 
     global cr_rep, co_rep, fl_rep
 
     cr_rep = ""
+    cr_rep += "<style>@page {size: A4;margin: 2cm;}</style>"
     cr_rep += "<h5><b>Report from Cryptoguard</b></h5>"
     cr_rep += cryptoguard_summary + "<br><br>"
     cr_rep += "<pre>"
@@ -241,6 +261,9 @@ def prepare_report(cryptoguard_summary, cryptoguard_report, cognicrypt_summary, 
     cr_rep += "</pre>"
 
     co_rep = ""
+    # co_rep += "<style>@page {size: letter landscape;margin: 2cm;}</style>"
+    # co_rep += "<style>@page {size: letter portrait;@frame content_frame {left: 50pt;width: 512pt;top: 50pt;height: 692pt;}}</style>"
+    co_rep += "<style>@page {size: A4;margin: 2cm;}</style>"
     co_rep += "<h5><b>Report from Cognicrypt</b></h5>"
     co_rep += "<pre>"
     co_rep += cognicrypt_summary
@@ -251,17 +274,21 @@ def prepare_report(cryptoguard_summary, cryptoguard_report, cognicrypt_summary, 
     co_rep += "</pre>"
 
     fl_rep = ""
+    fl_rep += "<style>@page {size: A4;margin: 2cm;}</style>"
     fl_rep += "<h3><b>Report from FlowDroid</b></h5>"
     fl_rep += "<pre>"
     fl_rep += flowdroid_leak_report
     fl_rep += "</pre>"
 
 def result (request):
-    global crypto_check, cogni_check, file_name, cryptoguard_report_file_name, cryptoguard, security_analysis_check, sectool_report
+    global crypto_check, cogni_check, file_name, cryptoguard_report_file_name, cryptoguard, security_analysis_check, sectool_report, file_path
     global combined_report
 
     cryptoguard_report = ''
     cognicrypt_report = ''
+
+    if not os.path.exists(file_path):
+        return HttpResponseRedirect('/')
 
     if security_analysis_check:
         if crypto_check:
@@ -338,6 +365,8 @@ def result (request):
         'leak_report' : flowdroid_leak_report,
         'sectool_report': sectool_report
     }
+
+    print("Crypto check: " + str(crypto_check))
 
     if crypto_check:
         os.remove(cryptoguard_report_file_name)

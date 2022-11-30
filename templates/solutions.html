@@ -7,8 +7,46 @@
     </head>
 
     <body>
-        <div class="card shadow p-3 mb-5 bg-white rounded" style="margin: 10px;" id="stronger_ssl_context">
-            <div class="card-body">
+        <style>
+            .custom-background{
+                background: radial-gradient(#ffffff, #ffeaba);
+            }
+
+            body
+            {
+                background: radial-gradient(#ffffff, #c6d7ee);
+            }
+
+            .navbar-custom {
+                background-color: #2e3b4e !important;
+                padding: 10px 2%;
+            }
+        </style>
+            
+        <script>
+            function background_set()
+            {
+                var sol_no = localStorage.getItem("sol_no");
+                var sol = document.getElementById(sol_no);
+                sol.classList.add('custom-background');
+            }
+            window.onload = background_set;
+        </script>
+
+        <nav class="navbar navbar-custom bg-info justify-content-center ">
+
+            <ul class="navbar-nav">
+
+                <li class="nav-item center">
+                    <img src="../static/images/logo.png" width="150" height="30" />
+                </li>
+
+            </ul>
+
+        </nav>
+
+        <div class="card shadow p-3 mb-5 bg-white rounded" style="margin: 10px; margin-top: 20px;" id="stronger_ssl_context">
+            <div class="card-body" id="sol1">
                 <h5 class="card-title"><b>Stronger SSL Context</b></h5>
                 <pre>
 SSLContext sc = SSLContext.getInstance("TLS");
@@ -18,7 +56,7 @@ SSLContext sc = SSLContext.getInstance("TLS");
         </div>
 
         <div class="card shadow p-3 mb-5 bg-white rounded" style="margin: 10px;" id="gcm">
-            <div class="card-body">
+            <div class="card-body" id="sol2">
                 <h5 class="card-title"><b>Use GCM</b></h5>
                 <pre>
 Cipher c = Cipher.getInstance("AES/GCM/NoPadding");
@@ -30,7 +68,7 @@ byte[] cipherText = c.doFinal(plainText);
         </div>
 
         <div class="card shadow p-3 mb-5 bg-white rounded" style="margin: 10px;" id="bouncy_castle">
-            <div class="card-body">
+            <div class="card-body" id="sol3">
                 <h5 class="card-title"><b>Using Bouncy Castle</b></h5>
                 <pre>
 public static byte[] getEncryptedPassword(String password, byte[] salt) throws NoSuchAlgorithmException, InvalidKeySpecException {

@@ -1,14 +1,164 @@
-{% load static %}
+<!-- {% load static %} -->
 <html>
     <head>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
+        <!-- <link rel="stylesheet" type="text/css" href="../static/css/style.css"/> -->
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script src="{% static 'js/script.js' %}"></script>
+        <script src="../static/js/script.js"></script>
     </head>
     <body>
-        <div id="loadingScreen">
+      <style>
+        body{
+    padding:0;
+    margin:0;
+    width:100%;
+    height:100vh;
+    background:radial-gradient(#ffffff, #c6d7ee);
+}
+
+.navbar-custom {
+            background-color: #2e3b4e !important;
+            padding: 10px 2%;
+}
+
+
+.wrapper{
+    width:200px;
+    height:60px;
+    position: absolute;
+    left:50%;
+    top:50%;
+    transform: translate(-50%, -50%);
+}
+.circle{
+    width:20px;
+    height:20px;
+    position: absolute;
+    border-radius: 50%;
+    background-color: #f9c23f;
+    left:15%;
+    transform-origin: 50%;
+    animation: circle .5s alternate infinite ease;
+}
+
+@keyframes circle{
+    0%{
+        top:60px;
+        height:5px;
+        border-radius: 50px 50px 25px 25px;
+        transform: scaleX(1.7);
+    }
+    40%{
+        height:20px;
+        border-radius: 50%;
+        transform: scaleX(1);
+    }
+    100%{
+        top:0%;
+    }
+}
+.circle:nth-child(2){
+    left:45%;
+    animation-delay: .2s;
+}
+.circle:nth-child(3){
+    left:auto;
+    right:15%;
+    animation-delay: .3s;
+}
+.shadow{
+    width:20px;
+    height:4px;
+    border-radius: 50%;
+    background-color: rgba(0,0,0,.5);
+    position: absolute;
+    top:62px;
+    transform-origin: 50%;
+    z-index: -1;
+    left:15%;
+    filter: blur(1px);
+    animation: shadow .5s alternate infinite ease;
+}
+
+@keyframes shadow{
+    0%{
+        transform: scaleX(1.5);
+    }
+    40%{
+        transform: scaleX(1);
+        opacity: .7;
+    }
+    100%{
+        transform: scaleX(.2);
+        opacity: .4;
+    }
+}
+
+/* 'Do you know that data leaks can cause your precious data to be stolen?' */
+/* 'Static analysis can find common security vulnerabilities in our code' */
+/* 'TLS should be used instead of SSL for client-server architecture' */
+/* 'MD5, SHA1 are considered weak hashing functions now' */
+/* 'DES should never be used as it is antiquated' */
+
+@keyframes animate{
+    /* 0%{
+        content: 'Please wait, we are getting things ready';
+    }
+    50%{
+      content: 'Please wait, almost thereee';
+    }
+    100%{
+        content: 'Almost there, hang on. We are done !';
+    } */
+    0%
+    {
+      content: 'Do you know that data leaks can cause your precious data to be stolen?';
+    }
+    25%
+    {
+      content: 'Static analysis can find common security vulnerabilities in our code';
+    }
+    50%
+    {
+      content: 'TLS should be used instead of SSL for client-server architecture';
+    }
+    75%
+    {
+      content: 'MD5, SHA1 are considered weak hashing functions now';
+    }
+    100%
+    {
+      content: 'DES should never be used as it is antiquated';
+    }
+}
+
+
+.shadow:nth-child(4){
+    left: 45%;
+    animation-delay: .2s
+}
+.shadow:nth-child(5){
+    left:auto;
+    right:15%;
+    animation-delay: .3s;
+}
+span{
+    font-family: 'Lato';
+    font-size: 25px;
+    letter-spacing: 5px;
+    color: #2e3b4e;
+    text-align: center;
+}
+
+span::before{
+  content: '';
+  animation-duration: 20s;
+  animation: animate infinite 20s;
+}
+
+      </style>
+        <!-- <div id="loadingScreen">
             <div class="container mt-100">
                 <br><br><br><br>
             </div>
@@ -46,7 +196,34 @@
                 </div>
                     
             </div>
-        </div>
+        </div> -->
+
+
+        <nav class="navbar navbar-custom bg-info justify-content-center">
+
+          <ul class="navbar-nav">
+              <li class="nav-item center">
+                  <img src="../static/images/logo.png" width="150" height="30" />
+              </li>
+  
+          </ul>
+  
+      </nav>
+
+      <div class="wrapper">
+        <div class="circle"></div>
+      <div class="circle"></div>
+      <div class="circle"></div>
+      <div class="shadow"></div>
+      <div class="shadow"></div>
+      <div class="shadow"></div>
+      <br>
+      </div>
+      <div class="container" style="text-align: center; margin-top: 30%;">
+      <span></span>
+      </div>
+        
+
 
         <script>
           fetch('/process')
