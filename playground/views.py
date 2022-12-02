@@ -25,6 +25,7 @@ file_name = ''
 cryptoguard_report_file_name = ''
 security_analysis_check = True
 sectool_report = ''
+sectool_desc = ''
 
 cr_rep = ''
 co_rep = ''
@@ -46,23 +47,54 @@ def combine_report(reports):
     global combine_report
     result = '<pre>'
 
-    encryption_violations = ["AES"]
+    client_server_violations = ["SSL", "HostNameVerifier", " TrustManager"]
+    encryption_violations = ["AES", "DES", "AES/ECB/PKCS5Padding", "AES/CBC/PKCS5Padding"]
     hash_violations = ["MD5","SHA1","SHA-1"]
+    prng_violations = ["java.util.Random"]
 
     for report in reports:
         report = report.replace("SHA-1", "SHA1")
 
     for report in reports:
+        for item in client_server_violations:
+            if report.find(item) != -1:
+                if item=="SSL":
+                    s = "There is a weak security protocol\n"
+                elif item=="HostNameVerifier" or " TrustManager":
+                    s = "There is a weak TrustManager security protocol\n"
+                # s+= "Solution: <a href=\"/solutions#gcm\">Use GCM</a>\n"
+                if item=="SSL":
+                    s+= "Solution: " + return_button("Use stronger SSL Context", "sol1")
+                elif item=="HostNameVerifier" or "TrustManager":
+                     s+= "Solution: " + return_button("Use TrustManager based on KeyStore", "sol4")
+                if result.find(s) == -1:
+                    result += s
+                if item == " TrustManager":
+                    s = item + "is not safe to use\n"
+                else:
+                    s = item + " is not safe to use\n"
+                if result.find(s) == -1:
+                    result += s
+                result += "\n"          
+
+        # result += "\n"
+
         for item in encryption_violations:
             if report.find(item) != -1:
                 s = "There is weak encryption function\n"
                 # s+= "Solution: <a href=\"/solutions#gcm\">Use GCM</a>\n"
-                s+= "Solution: " + return_button("Use GCM", "sol2") 
+                if item=="DES":
+                    s+= "Solution: " + return_button("Using Stronger Cipher", "sol6")
+                else:
+                    s+= "Solution: " + return_button("Use GCM", "sol2") 
                 if result.find(s) == -1:
                     result += s
                 s = item + " is not safe to use\n"
                 if result.find(s) == -1:
                     result += s
+                result += "\n"
+        
+        # result += "\n"
 
         # print(result+"$$$")
 
@@ -76,10 +108,29 @@ def combine_report(reports):
                 s = item + " is not safe to use\n"
                 if result.find(s) == -1:
                     result += s
+                result += "\n"
+
+        # result += "\n"
+
+        for item in prng_violations:
+            if report.find(item) != -1:
+                s = "There is a predictable Pseudo Random Generation algorithm\n"
+                # s+= "Solution: <a href=\"/solutions#bouncy_castle\">Using Bouncy Castle</a>\n"
+                s+= "Solution: " + return_button("Using Secure Random Number Generator", "sol5")
+                if result.find(s) == -1:
+                    result += s
+                s = item + " is not safe to use\n"
+                if result.find(s) == -1:
+                    result += s
+                result += "\n"
+
+        # result += "\n"
 
         # print(result+"$$$")
 
     result += "</pre>"
+
+    result = result.replace("\n\n\n\n", "\n")
 
     print(result)
 
@@ -190,6 +241,9 @@ def get_cognicrypt_summary(report):
     summary = summary.replace("======================= CogniCrypt Summary ==========================", "================== CogniCrypt Summary ==================" )
     summary = summary.replace("=====================================================================", "======================================================")
 
+    summary = "<pre>" + summary + "</pre>"
+    details = "<pre>" + details + "</pre>"
+
     return summary, details
 
 def combine(request):
@@ -282,7 +336,7 @@ def prepare_report(cryptoguard_summary, cryptoguard_report, cognicrypt_summary, 
 
 def result (request):
     global crypto_check, cogni_check, file_name, cryptoguard_report_file_name, cryptoguard, security_analysis_check, sectool_report, file_path
-    global combined_report
+    global combined_report, sectool_desc
 
     cryptoguard_report = ''
     cognicrypt_report = ''
@@ -333,6 +387,8 @@ def result (request):
     flow_check = not security_analysis_check
 
     if flow_check:
+        crypto_check = False
+        cogni_check = False
         flowdroid_leak_report = flowdroid.get_leak_report()
 
     prepare_report(cryptoguard_summary, cryptoguard_report, cognicrypt_summary, cognicrypt_details, flowdroid_leak_report)
@@ -363,14 +419,15 @@ def result (request):
         'flow_check': flow_check,
         'cogni_check' : cogni_check,
         'leak_report' : flowdroid_leak_report,
-        'sectool_report': sectool_report
+        'sectool_report': sectool_report,
+        'sectool_desc': sectool_desc
     }
 
     print("Crypto check: " + str(crypto_check))
 
-    if crypto_check:
+    if crypto_check and not flow_check:
         os.remove(cryptoguard_report_file_name)
-    if cogni_check:
+    if cogni_check and not flow_check:
         shutil.rmtree('cognicrypt-reports')
 
     os.remove(file_path)
@@ -378,7 +435,7 @@ def result (request):
     return render(request, 'result.html', context)
 
 def process(request):
-    global crypto_check, cogni_check, file_path, cryptoguard, security_analysis_check, sectool_report
+    global crypto_check, cogni_check, file_path, cryptoguard, security_analysis_check, sectool_report, sectool_desc
     if security_analysis_check:
         if crypto_check:
             cryptoguard.run_cryptoguard(file_path)
@@ -386,7 +443,7 @@ def process(request):
         if cogni_check:
             run_cognicrypt()
 
-        sectool_report = decompile(file_path)
+        sectool_report, sectool_desc = decompile(file_path)
         # print("a")
         # print(sectool_report)
 
@@ -446,7 +503,7 @@ def sec_report(request):
     content = ""
     content += "<h5><b>Report from SecTool</b></h5>"
     content += "<pre style=\"font-family: Garamond, serif;font-size: 18px;\">"
-    content += sectool_report
+    content += sectool_desc
     content += "</pre>"
 
     with open("templates/sec_report.html", "w") as file:

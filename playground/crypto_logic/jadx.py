@@ -4,26 +4,31 @@ import subprocess, shutil
 
 count = 0
 report_desc = ''
+report_summary = ''
 report = ''
 # violated_files = []
 rules = {}
 solutions = {}
+rule_exhausted = {}
 
 def load_rules():
     global rules
     with open("playground/crypto_logic/sec_tool_rules.txt", "r") as rule_file:
         content = rule_file.read()
         for line in content.splitlines():
+            if line[0]=='#':
+                continue
             rules_dummy_list = line.split(":")
             rules_value_list = rules_dummy_list[1].split(",")
             rules[rules_dummy_list[0]] = rules_value_list
             solution = rules_dummy_list[2]
             solutions[rules_dummy_list[0]] = solution
+            rule_exhausted[rules_dummy_list[0]] = False
             print(rules[rules_dummy_list[0]])
         rule_file.close()
 
 def search_rule_violation(directory_path):
-    global count, violated_files, report_desc
+    global count, violated_files, report_desc, report_summary, rule_exhausted
     for file in os.listdir(directory_path):
         if os.path.isdir(directory_path + "/" + file):
             search_rule_violation(directory_path+"/"+file)
@@ -52,11 +57,23 @@ def search_rule_violation(directory_path):
                                             line_number = i+1
                                             break
 
+                                if not rule_exhausted[key]:
+                                    report_summary += violation_keyword + " Rule violation\n"
+                                    report_summary += "Solution: " + solutions[key] + "\n\n"
+                                    rule_exhausted[key] = True
+
                                 print("SSL Rule violation in file: " + file + " line no: " + str(line_number))
                                 print("Line: " + content[new_lines[line_number-2]+1:new_lines[line_number-1]].strip())
-                                report_desc += violation_keyword + " Rule violation in file: " + file + " line no: " + str(line_number) + "\n"
+                                if violation_keyword==" Random":
+                                    report_desc += "Random" + " Rule violation in file: " + file + " line no: " + str(line_number) + "\n"
+                                else:
+                                    report_desc += violation_keyword + " Rule violation in file: " + file + " line no: " + str(line_number) + "\n"
                                 report_desc += "Line: " + content[new_lines[line_number-2]+1:new_lines[line_number-1]].strip() + "\n"
                                 report_desc += "Solution: " + solutions[key] + "\n\n"
+            
+            report_summary = report_summary.replace(" Random", "Random")
+            report_desc = report_desc.replace("<button","<p")
+            report_desc = report_desc.replace("</button>","</p>")
                             
             f.close()
 
@@ -105,9 +122,10 @@ def decompile(file_path):
         android_manifest.close()
 
         report += "Total violations: " + str(count) + "\n\n"
-        report += report_desc
+        # report += report_desc
+        report += report_summary
 
         if os.path.isdir("out"):
             shutil.rmtree('out')
 
-        return report
+        return report, report_desc

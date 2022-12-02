@@ -77,8 +77,54 @@ public static byte[] getEncryptedPassword(String password, byte[] salt) throws N
     return ((KeyParameter) gen.generateDerivedParameters(256)).getKey();
 }
                 </pre>
-
             </div>
-        </div>
+        </div>>
+
+        <div class="card shadow p-3 mb-5 bg-white rounded" style="margin: 10px;" id="untrusted_hostnameverifier">
+            <div class="card-body" id="sol4">
+                <h5 class="card-title"><b>Use TrustManager based on KeyStore</b></h5>
+                <pre>
+KeyStore ks = //Load keystore containing the certificates trusted
+
+SSLContext sc = SSLContext.getInstance("TLS");
+
+TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
+tmf.init(ks);
+
+sc.init(kmf.getKeyManagers(), tmf.getTrustManagers(),null);
+                </pre>
+            </div>
+        </div>>
+
+        <div class="card shadow p-3 mb-5 bg-white rounded" style="margin: 10px;" id="untrustrusted_prng">
+            <div class="card-body" id="sol5">
+                <h5 class="card-title"><b>Use Secured Random Number Generator</b></h5>
+                <pre>
+import org.apache.commons.codec.binary.Hex;
+
+String generateSecretToken() {
+    SecureRandom secRandom = new SecureRandom();
+
+    byte[] result = new byte[32];
+    secRandom.nextBytes(result);
+    return Hex.encodeHexString(result);
+}
+                </pre>
+            </div>
+        </div>>
+
+        <div class="card shadow p-3 mb-5 bg-white rounded" style="margin: 10px;" id="untrustrusted_prng">
+            <div class="card-body" id="sol6">
+                <h5 class="card-title"><b>Using Stronger Cipher</b></h5>
+                <pre>
+Cipher c = Cipher.getInstance("AES/GCM/NoPadding");
+c.init(Cipher.ENCRYPT_MODE, k, iv);
+byte[] cipherText = c.doFinal(plainText);
+                </pre>
+            </div>
+        </div>>
+
+        
+
     </body>
 </html>

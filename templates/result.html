@@ -119,7 +119,7 @@
                             {{cryptoguard_report|safe}}
                         </div>
                         <br>
-                        <button class="btn btn-info details" onclick="showCryptoguardDetails()">Show Details</button>
+                        <button class="btn btn-info details" onclick="showCryptoguardDetails()" id="details_crypt">Show Details</button>
                     </div>
                     <div class="card-footer" onclick="window.open('/crypto_report')">
                         <button class="footer-button"><b>Download Report</b></button>
@@ -141,7 +141,7 @@
                             {{cognicrypt_report|safe}}
                         </div>
                         <br><br>
-                        <button class="btn btn-info details" onclick="showCognicryptDetails()">Show Details</button>
+                        <button class="btn btn-info details" onclick="showCognicryptDetails()" id="details_cogni">Show Details</button>
                     </div>
                     <div class="card-footer" onclick="window.open('/cogni_report')">
                         <button class="footer-button"><b>Download Report</b></button>
@@ -159,6 +159,10 @@
                         <div id="sectool_report">
                             {{sectool_report|safe}}
                         </div>
+                        <div id="sectool_desc" style="display:none">
+                            {{sectool_desc|safe}}
+                        </div>
+                        <button class="btn btn-info details" onclick="showSecToolDetails()" id="details_sec">Show Details</button>
                     </div>
                     <div class="card-footer" onclick="window.open('/sec_report')">
                         <button class="footer-button"><b>Download Report</b></button>
@@ -185,7 +189,7 @@
             </div>
 
             <div>
-                <button class="btn btn-info" onclick="window.open('/fl_report')">Download Report</button>
+                <button class="btn btn-info combine-btn" onclick="window.open('/fl_report')">Download Report</button>
             </div>
 
         </div>
@@ -223,10 +227,22 @@
             }
         }
 
+        function showSecToolDetails() {
+            if (document.getElementById("sectool_desc").style.display == "none") {
+                document.getElementById("sectool_desc").style.display = "inline";
+                document.getElementById("details_sec").innerText = "Hide Details"
+            }
+
+            else {
+                document.getElementById("sectool_desc").style.display = "none";
+                document.getElementById("details_sec").innerText = "Show Details"
+            }
+        }
+
         function f(sol_no)
         {
             localStorage.setItem("sol_no", sol_no);
-            window.location.href = "/solutions";
+            window.location.href = `/solutions#${sol_no}`;
         }
     </script>
 

@@ -1,3 +1,6 @@
 SSLContext.getInstance:"SSL":<button onclick=f("sol1")>Stronger SSL Context</button>
 Cipher.getInstance:“AES”,“AES/ECB/NoPadding”,“AES/ECB/PKCS5Padding”,“AES/CBC/PKCS5Padding”:<button onclick=f("sol2")>Use GCM</button>
 MessageDigest.getInstance:“MD5”,“SHA1",“SHA-1”:<button onclick=f("sol3")>Using Bouncy Castle</button>
+implements:HostNameVerifier, TrustManager:<button onclick=f("sol4")>Use TrustManager based on KeyStore</button>
+Random: Random,java.util.Random:<button onclick=f("sol5")>Using Secure Random Number Generator</button>
+"DES":"DES","DES/ECB/PKCS5Padding":<button onclick=f("sol6")>Using Stronger Cipher</button>
