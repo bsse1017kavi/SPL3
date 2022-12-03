@@ -71,7 +71,11 @@ def search_rule_violation(directory_path):
                                 report_desc += "Line: " + content[new_lines[line_number-2]+1:new_lines[line_number-1]].strip() + "\n"
                                 report_desc += "Solution: " + solutions[key] + "\n\n"
             
-            report_summary = report_summary.replace(" Random", "Random")
+            # report_summary = report_summary.replace(" Random", "Random")
+            # report_summary = report_summary.replace(" ServerSocket", "ServerSocket")
+            # report_desc = report_desc.replace(" ServerSocket", "ServerSocket")
+            # report_summary = report_summary.replace(" Socket", "Socket")
+            # report_desc = report_desc.replace(" Socket", "Socket")
             report_desc = report_desc.replace("<button","<p")
             report_desc = report_desc.replace("</button>","</p>")
                             

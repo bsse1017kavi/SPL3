@@ -47,10 +47,10 @@ def combine_report(reports):
     global combine_report
     result = '<pre>'
 
-    client_server_violations = ["SSL", "HostNameVerifier", " TrustManager"]
-    encryption_violations = ["AES", "DES", "AES/ECB/PKCS5Padding", "AES/CBC/PKCS5Padding"]
+    client_server_violations = ["SSL", "HostNameVerifier", " TrustManager", " Socket", " ServerSocket"]
+    encryption_violations = ["AES", "DES", "AES/ECB/PKCS5Padding", "AES/CBC/PKCS5Padding", "RSA", "KeyPairGenerator.getInstance(\"RSA\")"]
     hash_violations = ["MD5","SHA1","SHA-1"]
-    prng_violations = ["java.util.Random"]
+    prng_violations = ["java.util.Random","Random "]
 
     for report in reports:
         report = report.replace("SHA-1", "SHA1")
@@ -60,17 +60,33 @@ def combine_report(reports):
             if report.find(item) != -1:
                 if item=="SSL":
                     s = "There is a weak security protocol\n"
-                elif item=="HostNameVerifier" or " TrustManager":
+                elif item=="HostNameVerifier" or item == " TrustManager":
                     s = "There is a weak TrustManager security protocol\n"
+                elif item==" Socket":
+                    s = "There is a weak Socket security protocol\n"
+                else:
+                    s = "There is a weak ServerSocket security protocol\n"
                 # s+= "Solution: <a href=\"/solutions#gcm\">Use GCM</a>\n"
                 if item=="SSL":
                     s+= "Solution: " + return_button("Use stronger SSL Context", "sol1")
-                elif item=="HostNameVerifier" or "TrustManager":
-                     s+= "Solution: " + return_button("Use TrustManager based on KeyStore", "sol4")
+                elif item=="HostNameVerifier" or item == "TrustManager":
+                    s+= "Solution: " + return_button("Use TrustManager based on KeyStore", "sol4")
+                else:
+                    if item==" Socket":
+                        s+= "Solution: " + return_button("Using SSL Socket", "sol7")
+                    elif item==" ServerSocket":
+                        s+= "Solution: " + return_button("Using SSL Server Socket", "sol8")
                 if result.find(s) == -1:
                     result += s
+                
                 if item == " TrustManager":
-                    s = item + "is not safe to use\n"
+                    s = "TrustManager is not safe to use\n"
+                elif item == "Random ":
+                    s = "Random is not safe to use\n"
+                elif item==" Socket":
+                    s= "Socket is not safe to use\n"
+                elif item==" ServerSocket":
+                    s= "ServerSocket is not safe to use\n"
                 else:
                     s = item + " is not safe to use\n"
                 if result.find(s) == -1:
@@ -85,6 +101,10 @@ def combine_report(reports):
                 # s+= "Solution: <a href=\"/solutions#gcm\">Use GCM</a>\n"
                 if item=="DES":
                     s+= "Solution: " + return_button("Using Stronger Cipher", "sol6")
+                elif item=="KeyPairGenerator.getInstance(\"RSA\")":
+                    s+= "Solution: " + return_button("Using at least 2048 bit Key", "sol11")
+                elif item=="RSA":
+                    s+= "Solution: " + return_button("Using RSA with Padding", "sol9")
                 else:
                     s+= "Solution: " + return_button("Use GCM", "sol2") 
                 if result.find(s) == -1:
@@ -127,6 +147,8 @@ def combine_report(reports):
         # result += "\n"
 
         # print(result+"$$$")
+
+        # result+="From " + report + "\n"
 
     result += "</pre>"
 

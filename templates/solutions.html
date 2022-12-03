@@ -78,7 +78,7 @@ public static byte[] getEncryptedPassword(String password, byte[] salt) throws N
 }
                 </pre>
             </div>
-        </div>>
+        </div>
 
         <div class="card shadow p-3 mb-5 bg-white rounded" style="margin: 10px;" id="untrusted_hostnameverifier">
             <div class="card-body" id="sol4">
@@ -94,7 +94,7 @@ tmf.init(ks);
 sc.init(kmf.getKeyManagers(), tmf.getTrustManagers(),null);
                 </pre>
             </div>
-        </div>>
+        </div>
 
         <div class="card shadow p-3 mb-5 bg-white rounded" style="margin: 10px;" id="untrustrusted_prng">
             <div class="card-body" id="sol5">
@@ -111,7 +111,7 @@ String generateSecretToken() {
 }
                 </pre>
             </div>
-        </div>>
+        </div>
 
         <div class="card shadow p-3 mb-5 bg-white rounded" style="margin: 10px;" id="untrustrusted_prng">
             <div class="card-body" id="sol6">
@@ -122,9 +122,54 @@ c.init(Cipher.ENCRYPT_MODE, k, iv);
 byte[] cipherText = c.doFinal(plainText);
                 </pre>
             </div>
-        </div>>
+        </div>
 
+        <div class="card shadow p-3 mb-5 bg-white rounded" style="margin: 10px;" id="untrustrusted_prng">
+            <div class="card-body" id="sol7">
+                <h5 class="card-title"><b>Using SSL Socket</b></h5>
+                <pre>
+Socket soc = SSLSocketFactory.getDefault().createSocket("www.google.com", 443);
+                </pre>
+            </div>
+        </div>
+
+        <div class="card shadow p-3 mb-5 bg-white rounded" style="margin: 10px;" id="untrustrusted_prng">
+            <div class="card-body" id="sol8">
+                <h5 class="card-title"><b>Using SSL ServerSocket</b></h5>
+                <pre>
+ServerSocket soc = SSLServerSocketFactory.getDefault().createServerSocket(1234);
+                </pre>
+            </div>
+        </div>
+
+        <div class="card shadow p-3 mb-5 bg-white rounded" style="margin: 10px;" id="untrustrusted_prng">
+            <div class="card-body" id="sol9">
+                <h5 class="card-title"><b>Using SSL ServerSocket</b></h5>
+                <pre>
+Cipher.getInstance("RSA/ECB/OAEPWithMD5AndMGF1Padding")
+                </pre>
+            </div>
+        </div>
         
+        <div class="card shadow p-3 mb-5 bg-white rounded" style="margin: 10px;" id="untrustrusted_prng">
+            <div class="card-body" id="sol10">
+                <h5 class="card-title"><b>Using at least 128 bit Entropy</b></h5>
+                <pre>
+KeyGenerator keyGen = KeyGenerator.getInstance("Blowfish");
+keyGen.init(128);
+                </pre>
+            </div>
+        </div>
+
+        <div class="card shadow p-3 mb-5 bg-white rounded" style="margin: 10px;" id="untrustrusted_prng">
+            <div class="card-body" id="sol11">
+                <h5 class="card-title"><b>Using at least 2048 bit Key</b></h5>
+                <pre>
+KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
+keyGen.initialize(2048);
+                </pre>
+            </div>
+        </div>
 
     </body>
 </html>
