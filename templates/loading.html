@@ -226,10 +226,19 @@ span::before{
 
 
         <script>
+          var time1 = new Date();
           fetch('/process')
           .then(res => {
             if(res.ok)
             {
+              var time2 = new Date()
+              var diff = time2.getTime() - time1.getTime()
+              var second =  diff/1000
+              var min = Math.floor(second/60)
+              diff = diff - (min*60*1000)
+              second = Math.floor(diff/1000)
+              var mil = diff%second
+              // alert(`${min} min ${second} seconds ${mil}milliseconds`);
               window.location.replace("/result");
             }
           })

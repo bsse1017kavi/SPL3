@@ -29,6 +29,10 @@ def load_rules():
 
 def search_rule_violation(directory_path):
     global count, violated_files, report_desc, report_summary, rule_exhausted
+
+    # report_summary = ""
+    # report_desc = ""
+
     for file in os.listdir(directory_path):
         if os.path.isdir(directory_path + "/" + file):
             search_rule_violation(directory_path+"/"+file)
@@ -58,7 +62,12 @@ def search_rule_violation(directory_path):
                                             break
 
                                 if not rule_exhausted[key]:
-                                    report_summary += violation_keyword + " Rule violation\n"
+                                    if violation_keyword=="new Socket(":
+                                        report_summary += "Socket" + " Rule violation\n"
+                                    elif violation_keyword=="new ServerSocket(":
+                                        report_summary += "ServerSocket" + " Rule violation\n"
+                                    else:
+                                        report_summary += violation_keyword + " Rule violation\n"
                                     report_summary += "Solution: " + solutions[key] + "\n\n"
                                     rule_exhausted[key] = True
 
@@ -66,6 +75,10 @@ def search_rule_violation(directory_path):
                                 print("Line: " + content[new_lines[line_number-2]+1:new_lines[line_number-1]].strip())
                                 if violation_keyword==" Random":
                                     report_desc += "Random" + " Rule violation in file: " + file + " line no: " + str(line_number) + "\n"
+                                elif violation_keyword=="new Socket(":
+                                    report_desc += "Socket" + " Rule violation in file: " + file + " line no: " + str(line_number) + "\n"
+                                elif violation_keyword=="new ServerSocket(":
+                                    report_desc += "ServerSocket" + " Rule violation in file: " + file + " line no: " + str(line_number) + "\n"
                                 else:
                                     report_desc += violation_keyword + " Rule violation in file: " + file + " line no: " + str(line_number) + "\n"
                                 report_desc += "Line: " + content[new_lines[line_number-2]+1:new_lines[line_number-1]].strip() + "\n"
@@ -86,7 +99,7 @@ def search_rule_violation(directory_path):
 
 
 def decompile(file_path):
-    global report, report_desc, count
+    global report, report_desc, count, report_summary
     jadx_path = 'crypto_tools/jadx/bin/jadx'
     # jadx_path = '../../crypto_tools/jadx/bin/jadx'
 
@@ -96,6 +109,7 @@ def decompile(file_path):
     subprocess.call([jadx_path, file_path, "-d", "out"])
 
     report = ""
+    report_summary = ""
     report_desc = ""
     count = 0
 
@@ -121,7 +135,8 @@ def decompile(file_path):
         # for key in rules:
         #     print(rules[key])
 
-        search_rule_violation("out/sources/"+package_name)
+        # search_rule_violation("out/sources/"+package_name)
+        search_rule_violation("out/sources/")
 
         android_manifest.close()
 

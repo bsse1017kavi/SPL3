@@ -47,8 +47,8 @@ def combine_report(reports):
     global combine_report
     result = '<pre>'
 
-    client_server_violations = ["SSL", "HostNameVerifier", " TrustManager", " Socket", " ServerSocket"]
-    encryption_violations = ["AES", "DES", "AES/ECB/PKCS5Padding", "AES/CBC/PKCS5Padding", "RSA", "KeyPairGenerator.getInstance(\"RSA\")"]
+    client_server_violations = ["\"SSL\"", "HostNameVerifier", " TrustManager", " Socket", " ServerSocket"]
+    encryption_violations = ["\"AES\"", "DES", "\"AES/ECB/PKCS5Padding\"", "\"AES/CBC/PKCS5Padding\"", "\"RSA/NONE/NoPadding\"", "KeyPairGenerator.getInstance(\"RSA\")"]
     hash_violations = ["MD5","SHA1","SHA-1"]
     prng_violations = ["java.util.Random","Random "]
 
@@ -330,9 +330,11 @@ def prepare_report(cryptoguard_summary, cryptoguard_report, cognicrypt_summary, 
 
     cr_rep = ""
     cr_rep += "<style>@page {size: A4;margin: 2cm;}</style>"
-    cr_rep += "<h5><b>Report from Cryptoguard</b></h5>"
-    cr_rep += cryptoguard_summary + "<br><br>"
+    # cr_rep += "<h5><b>Report from Cryptoguard</b></h5>"
+    # cr_rep += cryptoguard_summary + "<br><br>"
     cr_rep += "<pre>"
+    cr_rep += "<h1><b>Report from Cryptoguard</b></h1>"
+    cr_rep += cryptoguard_summary + "<br><br>"
     cr_rep += cryptoguard_report
     cr_rep += "</pre>"
 
@@ -340,8 +342,9 @@ def prepare_report(cryptoguard_summary, cryptoguard_report, cognicrypt_summary, 
     # co_rep += "<style>@page {size: letter landscape;margin: 2cm;}</style>"
     # co_rep += "<style>@page {size: letter portrait;@frame content_frame {left: 50pt;width: 512pt;top: 50pt;height: 692pt;}}</style>"
     co_rep += "<style>@page {size: A4;margin: 2cm;}</style>"
-    co_rep += "<h5><b>Report from Cognicrypt</b></h5>"
+    # co_rep += "<h5><b>Report from Cognicrypt</b></h5>"
     co_rep += "<pre>"
+    co_rep += "<h1><b>Report from Cognicrypt</b></h1>"
     co_rep += cognicrypt_summary
     co_rep += "</pre>" 
     co_rep += "<br><br>"
@@ -523,8 +526,9 @@ def sec_report(request):
     global sectool_report
 
     content = ""
-    content += "<h5><b>Report from SecTool</b></h5>"
+    # content += "<h5><b>Report from SecTool</b></h5>"
     content += "<pre style=\"font-family: Garamond, serif;font-size: 18px;\">"
+    content += "<h5><b>Report from SecTool</b></h5>"
     content += sectool_desc
     content += "</pre>"
 
